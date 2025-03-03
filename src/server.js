@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
-
+import { getAllContacts, getContactById } from './services/contacts.js';
 
 dotenv.config();
 
@@ -13,7 +13,9 @@ const setupServer = () => {
     app.use(cors());
     app.use(pino());
 
-    //* Get contacts from database...
+    app.get('/contacts', getAllContacts);
+
+    app.get('/contacts/:contactId', getContactById);
 
     app.get('/', (req, res) => {
         res.json({ message: 'Hello world!' });
