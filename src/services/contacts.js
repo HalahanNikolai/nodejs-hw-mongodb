@@ -1,9 +1,9 @@
-import { ContactsCollections } from '../db/models/contacts.js';
+import { ContactsFromSchema } from '../db/models/contacts.js';
 
-export const getAllContacts = async () => {
-    return await ContactsCollections.find();
+export const getContacts = async () => {
+    return await ContactsFromSchema.find();
 };
 
 export const getContactById = async (contactId) => {
-    return await ContactsCollections.findById(contactId);
+    return await ContactsFromSchema.findById(contactId);
 };

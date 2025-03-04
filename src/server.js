@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
-import { getAllContacts, getContactById } from './services/contacts.js';
+import { getContacts, getContactById } from './services/contacts.js';
 
 dotenv.config();
 
@@ -12,13 +12,43 @@ const setupServer = () => {
 
     app.use(cors());
     app.use(pino());
+    app.use(express.json());
 
-    app.get('/contacts', getAllContacts);
+    //***          GET-CONTACTS          ***//
+    app.get('/contacts', async (req, res) => {
+        const contacts = await getContacts();
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully found contacts',
+            data: contacts,
+        });
+    });
 
-    app.get('/contacts/:contactId', getContactById);
+    //***          GET-CONTACTS:ID          ***//
+    app.get('/contacts/:contactId', async (req, res) => {
+        try {
+            const { contactId } = req.params;
+            console.log('Received contactId:', contactId);
+            const contact = await getContactById(contactId);
+            if (contact === null) {
+                return res.status(404).json({
+                    status: 404,
+                    message: 'Contact not found',
+                });
+            }
+            res.status(200).json({
+                status: 200,
+                message: `Successfully found contact with id ${contactId}`,
+                data: contact,
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
 
     app.get('/', (req, res) => {
-        res.json({ message: 'Hello world!' });
+        res.json({ message: 'Hello my Friends!' });
     });
 
     app.use('*', (req, res) => {
