@@ -3,32 +3,33 @@ import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
 import routes from './routers/index.js';
+import { getEnvVar } from './utils/getEnvVar.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+
 dotenv.config();
 
 const setupServer = () => {
     const app = express();
     app.use(routes);
-    const PORT = process.env.PORT || 3000;
+
+    //***          PORT - from process.env          ***//
+    const PORT = getEnvVar('PORT', 3000);
 
     app.use(cors());
     app.use(pino());
     app.use(express.json());
 
 
-    app.get('/', (req, res) => {
+    app.get('/', (_req, res) => {
         res.json({ message: 'Hello my Friends!' });
     });
 
-    app.use('*', (req, res) => {
-        res.status(404).json({ message: 'Not found' });
-    });
+    //***          Handling 404 error         ****/
+    app.use(notFoundHandler);
 
-    app.use((err, req, res, next) => {
-        res.status(500).json({
-            message: 'Something went wrong',
-            error: err.message,
-        });
-    });
+    //***          Handling 500 error         ****/
+    app.use(errorHandler);
 
     const server = app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
