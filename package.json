@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-   "dev": "nodemon src/index.js",
+    "dev": "nodemon src/index.js",
     "start": "node ./src/index.js"
   },
   "repository": {
@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "http-errors": "^2.0.0",
     "mongoose": "^8.11.0",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",

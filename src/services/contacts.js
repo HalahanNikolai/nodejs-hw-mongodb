@@ -7,3 +7,7 @@ export const getContacts = async () => {
 export const getContactById = async (contactId) => {
     return await ContactsFromSchema.findById(contactId);
 };
+
+export const deleteContact = async (contactId) => {
+    return await ContactsFromSchema.findByIdAndDelete(contactId);
+};
