@@ -25,10 +25,6 @@ export async function getContactByIdPLC(req, res, next) {
   console.log('Received contactId:', contactId);
   const contact = await getContactById(contactId);
   if (contact === null) {
-    // return res.status(404).json({
-    //   status: 404,
-    //   message: 'Contact not found',
-    // });
     throw new createHttpError(404, 'Contact not found');
   }
   res.status(200).json({
@@ -83,9 +79,7 @@ export async function replaceContactController(req, res) {
 };
 
 //***          UPDATE-CONTACTS:ID (PATCH)         ***//
-
 export async function updateContactController(req, res) {
-
   const { contactId } = req.params;
   const contact = req.body;
   const result = await updateContact(contactId, contact);
