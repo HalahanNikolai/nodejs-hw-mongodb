@@ -46,11 +46,7 @@ export async function deleteContactController(req, res) {
   if (result === null) {
     throw new createHttpError(404, 'Contact not found');
   }
-  res.status(200).json({
-    status: 200,
-    message: `Successfully deleted contact with id ${contactId}`,
-    data: result,
-  });
+  res.status(204).json({ status: 204 });
 }
 
 //***          CREATE-CONTACTS          ***//
@@ -65,7 +61,7 @@ export async function createContactController(req, res) {
   // res.end();
 }
 
-//***          UPDATE-CONTACTS:ID          ***//
+//***          UPDATE-CONTACTS:ID  (PUT)        ***//
 export async function replaceContactController(req, res) {
   const { contactId } = req.params;
   const contact = req.body;
@@ -75,7 +71,7 @@ export async function replaceContactController(req, res) {
 
     return res.status(200).json({
       status: 200,
-      message: `Successfully updated contact with id ${contactId}`,
+      message: `Successfully patched a contact!`,
       data: result.value
     });
   }
@@ -86,7 +82,7 @@ export async function replaceContactController(req, res) {
   });
 };
 
-//***          UPDATE-CONTACTS:ID          ***//
+//***          UPDATE-CONTACTS:ID (PATCH)         ***//
 
 export async function updateContactController(req, res) {
 
@@ -100,9 +96,7 @@ export async function updateContactController(req, res) {
 
   res.status(200).json({
     status: 200,
-    message: `Successfully updated contact with id ${contactId}`,
-    data: result,
+    message: `Successfully patched a contact!`,
+    data: result.value,
   });
-  // console.log(result);
-  // res.end();
 }
