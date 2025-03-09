@@ -11,6 +11,9 @@ dotenv.config();
 
 const setupServer = () => {
     const app = express();
+
+    // app.use(express.json());
+
     app.use(routes);
 
     //***          PORT - from process.env          ***//
@@ -18,8 +21,6 @@ const setupServer = () => {
 
     app.use(cors());
     app.use(pino());
-    app.use(express.json());
-
 
     app.get('/', (_req, res) => {
         res.json({ message: 'Hello my Friends!' });

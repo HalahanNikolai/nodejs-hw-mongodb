@@ -1,5 +1,13 @@
 import createHttpError from 'http-errors';
-import { getContacts, getContactById, deleteContact } from '../services/contacts.js';
+
+import {
+  getContacts,
+  getContactById,
+  deleteContact,
+  createContact,
+  replaceContact,
+  updateContact
+} from '../services/contacts.js';
 
 //***          GET-CONTACTS          ***//
 export async function getContactsPLC(req, res) {
@@ -43,4 +51,58 @@ export async function deleteContactController(req, res) {
     message: `Successfully deleted contact with id ${contactId}`,
     data: result,
   });
+}
+
+//***          CREATE-CONTACTS          ***//
+export async function createContactController(req, res) {
+  const result = await createContact(req.body);
+  // console.log(result);
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created contact',
+    data: result,
+  });
+  // res.end();
+}
+
+//***          UPDATE-CONTACTS:ID          ***//
+export async function replaceContactController(req, res) {
+  const { contactId } = req.params;
+  const contact = req.body;
+
+  const result = await replaceContact(contactId, contact);
+  if (result.updatedExisting === true) {
+
+    return res.status(200).json({
+      status: 200,
+      message: `Successfully updated contact with id ${contactId}`,
+      data: result.value
+    });
+  }
+  res.status(201).json({
+    status: 201,
+    message: `Successfully created contact with id ${contactId}`,
+    data: result.value,
+  });
+};
+
+//***          UPDATE-CONTACTS:ID          ***//
+
+export async function updateContactController(req, res) {
+
+  const { contactId } = req.params;
+  const contact = req.body;
+  const result = await replaceContact(contactId, contact);
+
+  if (result === null) {
+    throw new createHttpError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: `Successfully updated contact with id ${contactId}`,
+    data: result,
+  });
+  // console.log(result);
+  // res.end();
 }

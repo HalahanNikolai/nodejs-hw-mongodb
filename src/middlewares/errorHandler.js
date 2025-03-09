@@ -2,6 +2,7 @@
 import createHttpError from 'http-errors';
 
 export function errorHandler(err, _req, res, _next) {
+    // console.error(err);
     if (createHttpError.isHttpError(err)) {
         return res
             .status(err.status)
