@@ -9,13 +9,20 @@ import {
   updateContact
 } from '../services/contacts.js';
 
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+
 //***          GET-CONTACTS          ***//
 export async function getContactsPLC(req, res) {
-  const contacts = await getContacts();
+  const { page, perPage } = parsePaginationParams(req.query);
+
+  // console.log({ page, perPage });
+
+  const response = await getContacts({ page, perPage });
+
   res.status(200).json({
     status: 200,
-    message: 'Successfully found contacts',
-    data: contacts,
+    message: 'Successfully found contacts!',
+    data: response,
   });
 }
 
@@ -29,7 +36,7 @@ export async function getContactByIdPLC(req, res, next) {
   }
   res.status(200).json({
     status: 200,
-    message: `Successfully found contact with id ${contactId}`,
+    message: `Contact fetched successfully ${contactId}`,
     data: contact,
   });
 }
