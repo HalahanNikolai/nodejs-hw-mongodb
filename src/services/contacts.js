@@ -1,16 +1,26 @@
 import { ContactsFromSchema } from '../db/models/contacts.js';
 
-export const getContacts = async ({ page, perPage }) => {
+export const getContacts = async ({ page, perPage, sortBy, sortOrder, filter }) => {
     const skip = page > 0 ? (page - 1) * perPage : 0;
+    const { contactType, isFavourite } = filter;
+
+    const contactsQuery = ContactsFromSchema.find();
+    if (filter.contactType) {
+        contactsQuery.where('contactType').equals(contactType);
+    }
+
+    if (filter.isFavourite) {
+        contactsQuery.where('isFavourite').equals(isFavourite);
+    }
 
     const [totalItems, contacts] = await Promise.all([
-        ContactsFromSchema.countDocuments(),
-        ContactsFromSchema.find().skip(skip).limit(perPage)
+        ContactsFromSchema.countDocuments(contactsQuery),
+        contactsQuery
+            .find()
+            .sort({ [sortBy]: sortOrder })
+            .skip(skip)
+            .limit(perPage)
     ]);
-
-    // const count = await ContactsFromSchema.countDocuments();
-    // // console.log(count);
-    // return await ContactsFromSchema.find().skip(skip).limit(perPage);
 
     const totalPages = Math.ceil(totalItems / perPage);
 
