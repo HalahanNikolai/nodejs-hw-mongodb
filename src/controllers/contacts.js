@@ -15,6 +15,8 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 //***          GET-CONTACTS          ***//
 export async function getContactsPLC(req, res) {
+  console.log(req.user);
+
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
@@ -27,7 +29,8 @@ export async function getContactsPLC(req, res) {
     perPage,
     sortBy,
     sortOrder,
-    filter
+    filter,
+    userId: req.user.id
   });
 
   res.status(200).json({
@@ -40,7 +43,7 @@ export async function getContactsPLC(req, res) {
 //***          GET-CONTACTS:ID          ***//
 export async function getContactByIdPLC(req, res, next) {
   const { contactId } = req.params;
-  console.log('Received contactId:', contactId);
+  // console.log('Received contactId:', contactId);
   const contact = await getContactById(contactId);
   if (contact === null) {
     throw new createHttpError(404, 'Contact not found');
@@ -65,8 +68,14 @@ export async function deleteContactController(req, res) {
 
 //***          CREATE-CONTACTS          ***//
 export async function createContactController(req, res) {
-  const result = await createContact(req.body);
+  const contact = {
+    ...req.body,
+    userId: req.user.id
+  };
+
+  const result = await createContact(contact);
   // console.log(result);
+
   res.status(201).json({
     status: 201,
     message: 'Successfully created contact',

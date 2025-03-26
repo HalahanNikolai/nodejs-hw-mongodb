@@ -22,7 +22,11 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
-});
+},
+    {
+        versionKey: false
+    }
+);
 userSchema.methods.toJSON = function () {
     const obj = this.toObject();
     delete obj.password;

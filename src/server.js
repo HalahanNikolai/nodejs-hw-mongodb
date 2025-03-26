@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
@@ -11,9 +12,9 @@ dotenv.config();
 
 const setupServer = () => {
     const app = express();
-
     // app.use(express.json());
 
+    app.use(cookieParser());
     app.use(routes);
 
     //***          PORT - from process.env          ***//

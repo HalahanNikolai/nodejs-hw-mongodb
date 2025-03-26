@@ -4,17 +4,18 @@ import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import createHttpError from 'http-errors';
 
+//** register user   */
 export async function registerUser(payload) {
     const user = await User.findOne({ email: payload.email });
     if (user) {
-        throw new createHttpError(409, 'User already exists');
+        throw new createHttpError(409, 'Email in use');
     }
-
     payload.password = await bcrypt.hash(payload.password, 10);
 
     return User.create(payload);
 }
 
+//** login user  */
 export async function loginUser(email, password) {
     const user = await User.findOne({ email });
     if (user === null) {
@@ -30,9 +31,39 @@ export async function loginUser(email, password) {
         userId: user._id,
         accessToken: crypto.randomBytes(30).toString('base64'),
         refreshToken: crypto.randomBytes(30).toString('base64'),
-        accessTokenValidUntil: new Date(Date.now() + 10 * 60 * 60 * 1000),
-        refreshTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 хвилин
+        refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
+    });
+}
+
+//** logout user  */
+export async function logoutUser(sessionId, refreshToken) {
+    await Session.deleteOne({ _id: sessionId, refreshToken });
+    return undefined;
+}
+
+//** refresh session  */
+export async function refreshSession(sessionId, refreshToken) {
+    const currentSession = await Session.findOne({ _id: sessionId, refreshToken });
+
+    if (currentSession === null) {
+        throw createHttpError.Unauthorized('Session not found');
+    }
+    if (currentSession.refreshTokenValidUntil < new Date()) {
+        throw createHttpError.Unauthorized('Access token expired');
+    }
+
+    await Session.deleteOne({
+        _id: currentSession._id,
+        refreshToken: currentSession.refreshToken,
     });
 
+    return Session.create({
+        userId: currentSession.userId,
+        accessToken: crypto.randomBytes(30).toString('base64'),
+        refreshToken: crypto.randomBytes(30).toString('base64'),
+        accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 хвилин
+        refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
+    });
 
 }

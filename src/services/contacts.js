@@ -1,10 +1,17 @@
 import { ContactsFromSchema } from '../db/models/contacts.js';
 
-export const getContacts = async ({ page, perPage, sortBy, sortOrder, filter }) => {
+export const getContacts = async ({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+    userId,
+}) => {
     const skip = page > 0 ? (page - 1) * perPage : 0;
     const { contactType, isFavourite } = filter;
 
-    const contactsQuery = ContactsFromSchema.find();
+    const contactsQuery = ContactsFromSchema.find({ userId });
     if (filter.contactType) {
         contactsQuery.where('contactType').equals(contactType);
     }
