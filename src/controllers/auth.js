@@ -14,7 +14,7 @@ export async function registerController(req, res) {
 //** login user  */
 export async function loginController(req, res) {
     const session = await loginUser(req.body.email, req.body.password);
-    console.log(session);
+    // console.log(session);
 
     res.cookie("sessionId", session._id, {
         httpOnly: true,
@@ -34,8 +34,7 @@ export async function loginController(req, res) {
 
 //** logout user  */
 export async function logoutController(req, res) {
-    console.log(req.cookies);
-
+    // console.log(req.cookies);
     const { sessionId, refreshToken } = req.cookies;
 
     if (typeof sessionId == "string" && typeof refreshToken == "string") {

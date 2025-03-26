@@ -15,7 +15,7 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 //***          GET-CONTACTS          ***//
 export async function getContactsPLC(req, res) {
-  console.log(req.user);
+  // console.log(req.user);
 
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
