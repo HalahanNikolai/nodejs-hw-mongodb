@@ -42,20 +42,20 @@ export const getContacts = async ({
     };
 };
 
-export const getContactById = async (contactId) => {
-    return await ContactsFromSchema.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+    return await ContactsFromSchema.findOne({ _id: contactId, userId });
 };
 
-export const deleteContact = async (contactId) => {
-    return await ContactsFromSchema.findByIdAndDelete(contactId);
+export const deleteContact = async (contactId, userId) => {
+    return await ContactsFromSchema.findOneAndDelete({ _id: contactId, userId });
 };
 
 export function createContact(contact) {
     return ContactsFromSchema.create(contact);
 };
 
-export async function replaceContact(contactId, contact) {
-    const result = await ContactsFromSchema.findByIdAndUpdate(contactId, contact, {
+export async function replaceContact(contactId, contact, userId) {
+    const result = await ContactsFromSchema.findOneAndUpdate({ _id: contactId, userId }, contact, {
         new: true,
         upsert: true,
         includeResultMetadata: true
@@ -68,8 +68,8 @@ export async function replaceContact(contactId, contact) {
 };
 
 //**          UPDATE-CONTACTS:ID          ***//
-export async function updateContact(contactId, contact) {
-    return ContactsFromSchema.findByIdAndUpdate(contactId, contact, {
+export async function updateContact(contactId, contact, userId) {
+    return ContactsFromSchema.findOneAndUpdate({ _id: contactId, userId }, contact, {
         new: true
     });
 }
