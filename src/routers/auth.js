@@ -3,11 +3,23 @@ import {
     registerController,
     loginController,
     logoutController,
-    refreshController
+    refreshController,
+    requestPasswordResetController,
+    resetPasswordController
 } from '../controllers/auth.js';
+
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { registerSchema, loginSchema } from '../validation/user.js';
+
+import {
+    registerSchema,
+    loginSchema,
+    requestPasswordResetSchema,
+    resetPaeewordSchema
+} from '../validation/user.js';
+
 import { validateBody } from '../middlewares/validateBody.js';
+
+
 
 
 const router = express.Router();
@@ -28,4 +40,16 @@ router.post(
 router.post('/logout', ctrlWrapper(logoutController));
 router.post('/refresh', ctrlWrapper(refreshController));
 
+router.post(
+    '/send-reset-email',
+    jsonParser,
+    validateBody(requestPasswordResetSchema),
+    ctrlWrapper(requestPasswordResetController));
+
+router.post(
+    '/reset-pwd',
+    jsonParser,
+    validateBody(resetPaeewordSchema),
+    ctrlWrapper(resetPasswordController)
+);
 export default router;

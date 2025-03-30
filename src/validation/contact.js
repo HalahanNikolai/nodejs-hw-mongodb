@@ -17,3 +17,5 @@ export const updateContactSchema = Joi.object({
     isFavourite: Joi.boolean().required(),
     contactType: Joi.string().min(3).max(20)
 });
+
+
