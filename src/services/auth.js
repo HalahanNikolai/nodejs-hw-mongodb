@@ -124,5 +124,4 @@ export async function resetPassword(token, password) {
         }
         throw error;
     }
-
 }
