@@ -8,6 +8,7 @@ import {
     updateContactController
 } from '../controllers/contacts.js';
 
+import { upload } from '../middlewares/upload.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { validateBody } from '../middlewares/validateBody.js';
 
@@ -28,7 +29,12 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdPLC));
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
 //***          CREATE-CONTACTS          ***//
-router.post('/', jsonParser, validateBody(contactSchema), ctrlWrapper(createContactController));
+router.post(
+    '/',
+    upload.single('photo'),
+    jsonParser,
+    validateBody(contactSchema),
+    ctrlWrapper(createContactController));
 
 //***          CREATE-CONTACTS:ID          ***//
 router.put(

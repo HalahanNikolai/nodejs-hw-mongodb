@@ -1,3 +1,4 @@
+import path from 'node:path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -12,7 +13,9 @@ dotenv.config();
 
 const setupServer = () => {
     const app = express();
-    // app.use(express.json());
+    app.use('/uploads', express.static(path.resolve('src', 'uploads')));
+
+    app.use(express.json());
 
     app.use(cookieParser());
     app.use(routes);

@@ -41,7 +41,7 @@ export async function loginUser(email, password) {
         userId: user._id,
         accessToken: crypto.randomBytes(30).toString('base64'),
         refreshToken: crypto.randomBytes(30).toString('base64'),
-        accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 хвилин
+        accessTokenValidUntil: new Date(Date.now() + 150 * 60 * 1000), // 15 хвилин
         refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
     });
 }

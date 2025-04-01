@@ -1,3 +1,6 @@
+import * as fs from 'fs/promises';
+import path from 'node:path';
+
 import createHttpError from 'http-errors';
 
 import {
@@ -12,6 +15,10 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+
+
 
 //***          GET-CONTACTS          ***//
 export async function getContactsPLC(req, res) {
@@ -68,10 +75,24 @@ export async function deleteContactController(req, res) {
 
 //***          CREATE-CONTACTS          ***//
 export async function createContactController(req, res) {
+
+  let photo = null;
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await uploadToCloudinary(req.file.path);
+    photo = result.secure_url;
+  }
+  else {
+    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
+
   const contact = {
     ...req.body,
-    userId: req.user.id
+    userId: req.user.id,
+    photo,
+    // photo: req.file.filename
   };
+  // console.log(req.file);
 
   const result = await createContact(contact);
   // console.log(result);
@@ -86,14 +107,28 @@ export async function createContactController(req, res) {
 
 //***          UPDATE-CONTACTS:ID  (PUT)        ***//
 export async function replaceContactController(req, res) {
+
+  let photo = null;
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await uploadToCloudinary(req.file.path);
+    photo = result.secure_url;
+  }
+  else {
+    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
+  //!!!!!!!!!!!!!!!!!!!!
+
   const { contactId } = req.params;
   const contact = req.body;
 
   const result = await replaceContact(
     contactId,
     contact,
-    req.user.id
+    req.user.id,
+    photo
   );
+
   if (result.updatedExisting === true) {
 
     return res.status(200).json({
@@ -111,9 +146,21 @@ export async function replaceContactController(req, res) {
 
 //***          UPDATE-CONTACTS:ID (PATCH)         ***//
 export async function updateContactController(req, res) {
+
+  let photo = null;
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await uploadToCloudinary(req.file.path);
+    photo = result.secure_url;
+  }
+  else {
+    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
+  //!!!!!!!!!!!!!!!!!!!
+
   const { contactId } = req.params;
   const contact = req.body;
-  const result = await updateContact(contactId, contact, req.user.id);
+  const result = await updateContact(contactId, contact, req.user.id, photo);
 
   if (result === null) {
     throw new createHttpError(404, 'Contact not found');

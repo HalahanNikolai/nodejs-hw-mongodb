@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
         pass: getEnvVar('SMTP_PASSWORD')
     },
 });
-
+//** send email  **/
 export function sendEmail(to, subject, content) {
     return transporter.sendMail({
         from: getEnvVar('SMTP_FROM'),
