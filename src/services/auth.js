@@ -86,10 +86,11 @@ export async function requestPasswordReset(email) {
     const token = jwt.sign(
         {
             sub: user._id,
-            name: user.name
+            name: user.name,
+            email: user.email
         },
         getEnvVar('JWT_SECRET'),
-        { expiresIn: '1h' });
+        { expiresIn: '5m' });
 
     const template = handlebars.compile(RESER_PWD_TEMPLATE);
 
