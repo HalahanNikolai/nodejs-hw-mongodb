@@ -7,6 +7,8 @@ import {
     resetPassword
 } from "../services/auth.js";
 
+import { getGoogleOAuthUrl } from "../utils/googleOAuth.js";
+
 //** register user   */
 export async function registerController(req, res) {
     const user = await registerUser(req.body);
@@ -87,4 +89,14 @@ export async function resetPasswordController(req, res) {
 
     // res.send("Password reset successfully");
 }
-//
+
+//** get OAuth url    **/
+export async function getOauthUrlController(req, res) {
+    const url = getGoogleOAuthUrl();
+
+    res.json({
+        status: 200,
+        message: "Successfully fetched oauth url.",
+        data: { oauth_url: url },
+    });
+}
