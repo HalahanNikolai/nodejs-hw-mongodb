@@ -77,13 +77,15 @@ export async function deleteContactController(req, res) {
 export async function createContactController(req, res) {
 
   let photo = null;
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
-    photo = result.secure_url;
-  }
-  else {
-    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
-    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    }
+    else {
+      await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+      photo = `http://localhost:3000/uploads/${req.file.filename}`;
+    }
   }
   //!!!!!!!!!!!!!!!!!!!
 
@@ -110,13 +112,16 @@ export async function createContactController(req, res) {
 export async function replaceContactController(req, res) {
 
   let photo = null;
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
-    photo = result.secure_url;
-  }
-  else {
-    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
-    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    }
+    else {
+      await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+      photo = `http://localhost:3000/uploads/${req.file.filename}`;
+    }
   }
   //!!!!!!!!!!!!!!!!!!!!
 
@@ -149,13 +154,16 @@ export async function replaceContactController(req, res) {
 export async function updateContactController(req, res) {
 
   let photo = null;
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
-    photo = result.secure_url;
-  }
-  else {
-    await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
-    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    }
+    else {
+      await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+      photo = `http://localhost:3000/uploads/${req.file.filename}`;
+    }
   }
   //!!!!!!!!!!!!!!!!!!!
 
