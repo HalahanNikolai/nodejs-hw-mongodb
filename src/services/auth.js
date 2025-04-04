@@ -89,7 +89,7 @@ export async function requestPasswordReset(email) {
             name: user.name
         },
         getEnvVar('JWT_SECRET'),
-        { expiresIn: '1h' });
+        { expiresIn: '5m' });
 
     const template = handlebars.compile(RESER_PWD_TEMPLATE);
 
