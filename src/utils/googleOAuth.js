@@ -15,3 +15,14 @@ export function getGoogleOAuthUrl() {
         ],
     });
 }
+
+export async function validateCode(code) {
+    const response = await googleOAuthClient.getToken(code);
+    // console.log({ response });
+
+    const ticket = await googleOAuthClient.verifyIdToken({
+        idToken: response.tokens.id_token,
+    });
+    // console.log({ ticket });
+    return ticket;
+}
