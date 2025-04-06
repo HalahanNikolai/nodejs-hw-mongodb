@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -8,11 +9,14 @@ import routes from './routers/index.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-
+import swaggerUiExpress from 'swagger-ui-express';
 dotenv.config();
 
 const setupServer = () => {
+    const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve('docs', 'swagger.json'), 'utf-8'));
+    // console.log(swaggerDocument);
     const app = express();
+    app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocument));
     app.use('/uploads', express.static(path.resolve('src', 'uploads')));
 
     app.use(express.json());
